@@ -1,0 +1,234 @@
+<html>
+<title>Search Page</title>
+<head>
+    <script src="/js/angular.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/jquery-1.11.2.min.js"></script>
+    <script data-require="ui-bootstrap@*" data-semver="0.12.1"
+            src="/js/ui-bootstrap-tpls-0.12.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/my.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+</head>
+<body ng-app="Search" ng-controller="LibroController">
+<div style="border-bottom: 3px solid grey;">
+    <H1 align="center">Welcome to Online Library</H1>
+</div>
+<div>
+    <h3>Pick Your Search Criteria</h3>
+</div>
+<div>
+    <label class="container">{{getLibros}} <input type="radio"
+                                                 checked="checked" ng-model="libri" value="getLibros"> <span
+            class="checkmark"></span>
+    </label> <label class="container">{{count}} <input type="radio"
+                                                       name="radio" ng-model="libri" value="count"> <span
+        class="checkmark"></span>
+</label> <label class="container">{{addLibro}} <input type="radio"
+                                                     name="radio" ng-model="libri" value="addLibro"> <span
+        class="checkmark"></span>
+</label> <label class="container">{{delLibro}} <input type="radio"
+                                                     name="radio" ng-model="libri" value="delLibro"> <span
+        class="checkmark"></span>
+</label> <label class="container">{{borrowLibro}} <input type="radio"
+                                                        name="radio" ng-model="libri" value="borrowLibro"> <span
+        class="checkmark"></span>
+</label> <label class="container">{{cancelBorrow}} <input type="radio"
+                                                          name="radio" ng-model="libri" value="cancelBorrow"> <span
+        class="checkmark"></span>
+</label>
+</div>
+<div style="padding-top: 16px; padding-bottom: 18px">
+    <button ng-click="search()"
+            style="border: none; color: black; padding: 10px 30px; text-align: center; text-decoration: none; display: inline-block;">
+        Search
+    </button>
+</div>
+<div>
+    <table id="librotable" cellpadding="2" cellspacing="1" border="1"
+           ng-show="searchLibro">
+        <tr style="background-color: lightgrey">
+            <td>Libro E-code</td>
+            <td>Title</td>
+            <td>Cover</td>
+            <td>Publisher</td>
+            <td>No of Pages</td>
+            <td>No of Libros Available</td>
+        </tr>
+        <tr ng-repeat="libro in filteredTodos">
+            <td>{{libro.isbn}}</td>
+            <td>{{libro.title}}</td>
+            <td>{{libro.cover}}</td>
+            <td>{{libro.publisher}}</td>
+            <td>{{libro.pages}}</td>
+            <td>{{libro.available}}</td>
+        </tr>
+    </table>
+    <div ng-show="searchLibro">
+        <pagination ng-model="currentPage" total-items="output.length"
+                    max-size="maxSize" boundary-links="true"></pagination>
+    </div>
+</div>
+<div class="addLibro">
+    <H4 align="center" ng-show="addLibroFlag">Enter Libro Details here</H4>
+    <table id="addLibros" cellpadding="2" cellspacing="1" border="1"
+           ng-show="addLibroFlag">
+        <thead>
+        <tr style="background-color: lightgrey">
+            <td>Libro E-code</td>
+            <td>Title</td>
+            <td>Cover</td>
+            <td>Publisher</td>
+            <td>No of Pages</td>
+            <td>No of Libros Available</td>
+        </tr>
+        </thead>
+        <tr ng-repeat="user in libroCart">
+            <!--   -->
+            <td><input type="text" name="isbn" ng-model="user.isbn"/></td>
+            <td><input type="text" name="title" ng-model="user.title"/></td>
+            <td><input type="text" name="cover" ng-model="user.cover"/></td>
+            <td><input type="text" name="publisher"
+                       ng-model="user.publisher"/></td>
+            <td><input type="text" name="pages" ng-model="user.pages"/></td>
+            <td><input type="text" name="available"
+                       ng-model="user.available"/></td>
+        </tr>
+    </table>
+    <div align="left">
+        <button ng-click="addRows($event)" ng-show="addLibroFlag"
+                style="border: none; color: black; padding: 10px 30px; text-decoration: none; display: inline-block;">
+            Add
+            Row
+        </button>
+        <button ng-click="removeRows()" ng-show="addLibroFlag"
+                style="border: none; color: black; padding: 10px 30px; text-decoration: none; display: inline-block;">
+            Remove
+            Row
+        </button>
+        <button ng-click="addRow()" ng-show="addLibroFlag"
+                style="border: none; color: black; padding: 10px 30px; text-decoration: none; display: inline-block;">
+            Sumbit
+            Data
+        </button>
+    </div>
+    <div>
+        <H4 align="center" ng-show="delLibroFlag">Pick Libros to delete</H4>
+        <table id="addLibros" cellpadding="2" cellspacing="1" border="1"
+               ng-show="delLibroFlag">
+            <thead>
+            <tr style="background-color: lightgrey">
+                <td>Pick</td>
+                <td>Libro E-code</td>
+                <td>Title</td>
+                <td>Cover</td>
+                <td>Publisher</td>
+                <td>No of Pages</td>
+                <td>No of Libros Available</td>
+            </tr>
+            </thead>
+            <tr ng-repeat="bcache in filteredTodosC">
+                <td><input type="checkbox" ng-model='bcache.selected'></td>
+                <td>{{bcache.isbn}}</td>
+                <td>{{bcache.title}}</td>
+                <td>{{bcache.cover}}</td>
+                <td>{{bcache.publisher}}</td>
+                <td>{{bcache.pages}}</td>
+                <td>{{bcache.available}}</td>
+            </tr>
+        </table>
+        <div ng-show="delLibroFlag">
+            <pagination ng-model="currentPage" total-items="libroCache.length"
+                        max-size="maxSize" boundary-links="true"></pagination>
+        </div>
+        <div align="left">
+            <button ng-click="deleteRows(bcache)" ng-show="delLibroFlag"
+                    style="border: none; color: black; padding: 10px 30px; text-decoration: none; display: inline-block;">
+                Delete
+                Libros
+            </button>
+        </div>
+    </div>
+    <div ng-show="displayStandardMessage">
+        <h3>Hey Your record submitted sucessfully.....</h3>
+    </div>
+    <div ng-show="displayError">
+        <h3>Some error occured please try again..</h3>
+    </div>
+</div>
+
+
+<div class="borrowLibro" ng-show="borrowFlag" style="padding-left: 10px">
+    <h4 align="center">Pick Your Libros..</h4>
+    <table id="borrowLibros" cellpadding="1" cellspacing="2" border="1"
+           ng-show="borrowFlag">
+        <tr>
+            <td ng-repeat="bcache in filteredTodosC" align="center">
+                <div style="height: 200px; width: 100%;">
+                    <label style="padding: 10px;">ISBN ISaaaaaaaaaaaaaaaaa:{{bcache.isbn}} </label> <br>
+                    <label style="padding: 10px;">Title is:{{bcache.title}} </label> <br>
+                    <label style="padding: 10px;">Amount:{{bcache.available}}
+                    </label> <br>
+                    <div>
+                        <button type="button" ng-click="makeLibroing(bcache)"
+                                ng-show="borrowLibro"
+                                style="border: none; color: black; padding: 10px 30px; text-decoration: none; display: inline-block; text-align: center;">
+                            Buy
+                        </button>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div ng-show="borrowFlag">
+        <pagination ng-model="currentPage" total-items="libroCache.length"
+                    max-size="maxSize" boundary-links="true"></pagination>
+    </div>
+    <div class="popup" ng-show="displayLibroingSucess">
+            <span class="popuptext" id="myPopup">
+               <h3>Your Libroing is
+                  sucessfull
+               </h3>
+            </span>
+    </div>
+</div>
+<!-- Cancel Libroing -->
+<div class="cancelLibroing" ng-show="cancelLibroing"
+     style="padding-left: 10px">
+    <h4 align="center">Cancel Your Libroing</h4>
+    <table id="cancelLibroing" cellpadding="1" cellspacing="2" border="1"
+           ng-show="cancelLibroing">
+        <tr>
+            <td ng-repeat="bcache in alreadyLibroed" align="center">
+                <div style="height: 200px; width: 100%;">
+                    <label style="padding: 10px;">Libroing Code:{{bcache.isbn}}
+                    </label> <br> <label style="padding: 10px;">Libroing date
+                    is:{{bcache.libroing_date}} </label> <br> <label
+                        style="padding: 10px;">Refund Amount:{{bcache.quantity}}
+                </label> <br>
+                    <div>
+                        <button type="button" ng-click="cancelLibroingM(bcache)"
+                                ng-show="cancelLibroing"
+                                style="border: none; color: black; padding: 10px 30px; text-decoration: none; display: inline-block; text-align: center;">
+                            Cancel
+                            Order
+                        </button>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div ng-show="cancelLibroing">
+        <pagination ng-model="currentPage" total-items="cancelCache.length"
+                    max-size="maxSize" boundary-links="true"></pagination>
+    </div>
+    <div class="popup" ng-show="displayCancelSucess">
+            <span class="popuptext" id="myPopup">
+               <h3>Cancelled
+                  Sucessfully
+               </h3>
+            </span>
+    </div>
+</div>
+<!--  Ends...-->
+</body>
+</html>

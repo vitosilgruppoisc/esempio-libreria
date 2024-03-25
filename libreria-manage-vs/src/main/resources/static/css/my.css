@@ -1,0 +1,63 @@
+ .beta td, .beta th {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 16px;
+  padding-bottom: 18px;
+ 
+  left: -999em;
+} 
+.WebContainer{
+    width:100%;
+    min-width:1000px;
+    height:auto;
+} 
+#librotable {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#librotable td, #librotable th {
+     border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#librotable tr:nth-child(even){background-color: #f2f2f1;}
+
+#librotable tr:hover {background-color: #ddd;}
+
+#librotable th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #4CAF50;
+    color: white;
+}
+
+#addLibros {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#addLibros td, #addLibros th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#addLibros tr:nth-child(even){background-color: #f2f2f2;}
+
+#addLibros tr:hover {background-color: #ddd;}
+
+#addLibros th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+.wrapper {
+  min-width: 400px; /* Minimum width of your wrapper element */
+  overflow: hidden;
+  display: inline-block;
+}
